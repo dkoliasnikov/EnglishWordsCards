@@ -2,6 +2,7 @@
 using Domain.Exceptions;
 using Domain.Models;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace Domain.Services;
 
@@ -28,26 +29,28 @@ internal class VocabularyStorage : IVocabularyStorage
         }
 
         vocabulary.Words.AddRange(words);
-        System.IO.File.WriteAllText(_options.VocabularyStoragePath, JsonConvert.SerializeObject(vocabulary, Formatting.Indented));
+        File.WriteAllText(_options.VocabularyStoragePath, JsonConvert.SerializeObject(vocabulary, Formatting.Indented));
     }
 
     public async Task<Vocabulary> GetVocabularyAsync()
     {
         ThrowOnStorageFileNotExists();
-        return JsonConvert.DeserializeObject<Vocabulary>(System.IO.File.ReadAllText(_options.VocabularyStoragePath));
+        var vocabulary = JsonConvert.DeserializeObject<Vocabulary>(File.ReadAllText(_options.VocabularyStoragePath));
+
+        return new Vocabulary(vocabulary.Words.Where(w => !string.IsNullOrEmpty(w.Literal)).ToList());
     }
 
     void EnsureStorageFileCreated()
     {
-        if (!System.IO.File.Exists(_options.VocabularyStoragePath))
+        if (!File.Exists(_options.VocabularyStoragePath))
         {
-            System.IO.File.WriteAllText(_options.VocabularyStoragePath, JsonConvert.SerializeObject(new Vocabulary(new ()), Formatting.Indented));
+            File.WriteAllText(_options.VocabularyStoragePath, JsonConvert.SerializeObject(new Vocabulary(new ()), Formatting.Indented));
         }
     }
 
     void ThrowOnStorageFileNotExists()
     {
-        if (!System.IO.File.Exists(_options.VocabularyStoragePath))
+        if (!File.Exists(_options.VocabularyStoragePath))
             throw new FileNotFoundException("Vocabulary storage file does not exists", _options.VocabularyStoragePath);
     }
 

@@ -18,7 +18,7 @@ public static class Entry
 
         EnsureOptionsFileCreated();
 
-        var options = JsonConvert.DeserializeObject<Options>(System.IO.File.ReadAllText(Constants.Paths.OptionsPath));
+        var options = JsonConvert.DeserializeObject<Options>(File.ReadAllText(Constants.Paths.OptionsPath));
         builder.RegisterInstance(options);
 
         builder.RegisterType<VocabularyStorage>().As<IVocabularyStorage>();
@@ -30,9 +30,9 @@ public static class Entry
 
     private static void EnsureOptionsFileCreated()
     {
-        if (!System.IO.File.Exists(Constants.Paths.OptionsPath))
+        if (!File.Exists(Constants.Paths.OptionsPath))
         {
-            System.IO.File.WriteAllText(Constants.Paths.OptionsPath, JsonConvert.SerializeObject(new Options(), Formatting.Indented));
+            File.WriteAllText(Constants.Paths.OptionsPath, JsonConvert.SerializeObject(new Options(), Formatting.Indented));
         }
     }
 }
