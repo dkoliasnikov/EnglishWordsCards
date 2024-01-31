@@ -32,7 +32,9 @@ using (var scope = ioc)
 
 static ICardsPlayer LetUserChooseGameMode(IContainer scope, IMainLog log)
 {
+    log.AppendLine($"Choose game mode\n\n1 - Quiz\n\n2 - least known card");
+    ICardsPlayer player = Console.ReadKey().KeyChar == '1' ? scope.Resolve<IQuizPlayer>() : scope.Resolve<ILeastKnown>();
 
-    log.AppendLine($"Choose game mode\n\n1 - Quiz\n\n2 - Cards shuffle");
-    return Console.ReadKey().KeyChar == '1' ? scope.Resolve<IQuizPlayer>() : scope.Resolve<IShuffleCardsPlayer>();
+    Console.Clear();
+    return player;
 }

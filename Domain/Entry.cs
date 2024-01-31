@@ -19,12 +19,14 @@ public static class Entry
         EnsureOptionsFileCreated();
 
         var options = JsonConvert.DeserializeObject<Options>(File.ReadAllText(Constants.Paths.OptionsPath));
-        builder.RegisterInstance(options);
+
+        builder.RegisterInstance<Options>(options);
 
         builder.RegisterType<VocabularyStorage>().As<IVocabularyStorage>();
         builder.RegisterType<StorageEnricher>().As<IStorageEnricher>();
         builder.RegisterType<QuizCardsPlayer>().As<IQuizPlayer>();
-        builder.RegisterType<ShuffleCardsPlayer>().As<IShuffleCardsPlayer>();
+        builder.RegisterType<LeastKnownCards>().As<ILeastKnown>();
+        builder.RegisterType<ShuffleCardsProgressStorage>().As<IShuffleCardsProgressStorage>();
 
         return builder;
     }
@@ -34,4 +36,6 @@ public static class Entry
         if (!File.Exists(Constants.Paths.OptionsPath))
             File.WriteAllText(Constants.Paths.OptionsPath, JsonConvert.SerializeObject(new Options(), Formatting.Indented));
     }
+
+    private static void SaveOptions(Options options) => File.WriteAllText(Constants.Paths.OptionsPath, JsonConvert.SerializeObject(options, Formatting.Indented));
 }

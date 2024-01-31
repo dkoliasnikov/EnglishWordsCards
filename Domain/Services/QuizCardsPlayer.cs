@@ -7,21 +7,23 @@ namespace Domain.Services;
 
 internal class QuizCardsPlayer : IQuizPlayer
 {
-    private readonly IVocabularyStorage _vocbularyStorage;
+    private readonly IVocabularyStorage _vocabularyStorage;
     private readonly IMainLog _log;
+    private int _delay;
 
-    public QuizCardsPlayer(IVocabularyStorage vocbularyStorage, IMainLog log)
+    public QuizCardsPlayer(IVocabularyStorage vocbularyStorage, IMainLog log, Options options)
     {
-        _vocbularyStorage = vocbularyStorage;
+        _vocabularyStorage = vocbularyStorage;
         _log = log;
+        _delay = options.DelayBeforeNextCard;
     }
 
     public async Task Play()
     {
         ConsoleDefaultColor();
-        var vocalublar = await _vocbularyStorage.GetVocabularyAsync();
+        var vocabular = await _vocabularyStorage.GetVocabularyAsync();
 
-        var words = vocalublar.Words.Shuffle();
+        var words = vocabular.Words.Shuffle();
 
         foreach (var word in words)
         {
@@ -71,7 +73,7 @@ internal class QuizCardsPlayer : IQuizPlayer
             ConsoleCorrectAnswerColor();
             _log.AppendLine("Correct!");
             ConsoleDefaultColor();
-            await Task.Delay(1000);
+            await Task.Delay(_delay);
         }
         else
         {
