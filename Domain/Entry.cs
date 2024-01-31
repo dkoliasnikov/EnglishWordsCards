@@ -23,6 +23,7 @@ public static class Entry
 
         builder.RegisterType<VocabularyStorage>().As<IVocabularyStorage>();
         builder.RegisterType<StorageEnricher>().As<IStorageEnricher>();
+        builder.RegisterType<QuizCardsPlayer>().As<IQuizPlayer>();
         builder.RegisterType<ShuffleCardsPlayer>().As<IShuffleCardsPlayer>();
 
         return builder;
@@ -31,8 +32,6 @@ public static class Entry
     private static void EnsureOptionsFileCreated()
     {
         if (!File.Exists(Constants.Paths.OptionsPath))
-        {
             File.WriteAllText(Constants.Paths.OptionsPath, JsonConvert.SerializeObject(new Options(), Formatting.Indented));
-        }
     }
 }

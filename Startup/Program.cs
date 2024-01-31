@@ -15,13 +15,14 @@ using (var scope = ioc)
 
     try
     {
-        var enricher = scope.Resolve<IStorageEnricher>();
-        var shuffleCardsPlayer = scope.Resolve<IShuffleCardsPlayer>();
-        await shuffleCardsPlayer.Play();
+        ICardsPlayer player = LetUserChooseGameMode(scope, log);
+
+        await player.Play();
     }
     catch (Exception e)
     {
         await log.Error("Error", e);
+        Console.ReadKey();
     }
     finally
     {
@@ -29,3 +30,9 @@ using (var scope = ioc)
     }
 }
 
+static ICardsPlayer LetUserChooseGameMode(IContainer scope, IMainLog log)
+{
+
+    log.AppendLine($"Choose game mode\n\n1 - Quiz\n\n2 - Cards shuffle");
+    return Console.ReadKey().KeyChar == '1' ? scope.Resolve<IQuizPlayer>() : scope.Resolve<IShuffleCardsPlayer>();
+}

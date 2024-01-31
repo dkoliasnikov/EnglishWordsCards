@@ -1,6 +1,6 @@
 ﻿namespace Domain.Abstraction;
 
-public interface IShuffleCardsPlayer : ICardsPlayer
+public interface ICardsPlayer
 {
     Task Play();
 }

@@ -40,7 +40,7 @@ internal class VocabularyStorage : IVocabularyStorage
         return new Vocabulary(vocabulary.Words.Where(w => !string.IsNullOrEmpty(w.Literal)).ToList());
     }
 
-    void EnsureStorageFileCreated()
+    private void EnsureStorageFileCreated()
     {
         if (!File.Exists(_options.VocabularyStoragePath))
         {
@@ -48,7 +48,7 @@ internal class VocabularyStorage : IVocabularyStorage
         }
     }
 
-    void ThrowOnStorageFileNotExists()
+    private void ThrowOnStorageFileNotExists()
     {
         if (!File.Exists(_options.VocabularyStoragePath))
             throw new FileNotFoundException("Vocabulary storage file does not exists", _options.VocabularyStoragePath);

@@ -37,7 +37,7 @@ internal partial class StorageEnricher : IStorageEnricher
         await _vocabularyStorage.AddNewWordsAsync(words);
     }
 
-    void ThrowOnSeedFileNotExists()
+    private void ThrowOnSeedFileNotExists()
     {
         if (!File.Exists(_options.WordsSeedPath))
             throw new FileNotFoundException("Words seed file does not exists", _options.WordsSeedPath);
