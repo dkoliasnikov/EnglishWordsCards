@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="7.1.0" />
-    <PackageReference Include="Common" Version="1.0.9" />
+    <PackageReference Include="Common" Version="1.0.31" />
   </ItemGroup>
 
   <ItemGroup>

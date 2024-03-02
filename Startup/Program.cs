@@ -32,8 +32,11 @@ using (var scope = ioc)
 
 static ICardsPlayer LetUserChooseGameMode(IContainer scope, IMainLog log)
 {
-    log.AppendLine($"Choose game mode\n\n1 - Quiz\n\n2 - least known card");
-    ICardsPlayer player = Console.ReadKey().KeyChar == '1' ? scope.Resolve<IQuizPlayer>() : scope.Resolve<ILeastKnown>();
+    var quiz = scope.Resolve<IQuizPlayer>();
+    var leastKnown = scope.Resolve<ILeastKnown>();
+
+	log.AppendLine($"Choose game mode\n\n1 - Quiz (shortcuts: {quiz.GetShortcuts()})\n\n2 - least known card (shortcuts: {leastKnown.GetShortcuts()})");
+    ICardsPlayer player = Console.ReadKey().KeyChar == '1' ? quiz : leastKnown;
 
     Console.Clear();
     return player;

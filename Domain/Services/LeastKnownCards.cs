@@ -66,6 +66,8 @@ internal class LeastKnownCards : ILeastKnown
         }
     }
 
+    public string? GetShortcuts() => $"'0' - show translation. '+' - i know the answer. '-' - i don`t know the answer";
+
     void ClearReadKey()
     {
         if (Console.CursorLeft <= 0)

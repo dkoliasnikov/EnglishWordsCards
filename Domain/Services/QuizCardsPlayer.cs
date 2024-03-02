@@ -85,7 +85,10 @@ internal class QuizCardsPlayer : IQuizPlayer
         }
     }
 
-    private static void ConsoleIncorrectAnswerColor()
+    public string? GetShortcuts() => null;
+
+
+	private static void ConsoleIncorrectAnswerColor()
     {
         Console.BackgroundColor = ConsoleColor.Red;
         Console.ForegroundColor = ConsoleColor.White;
