@@ -25,7 +25,7 @@ public static class Entry
         builder.RegisterType<VocabularyStorage>().As<IVocabularyStorage>();
         builder.RegisterType<StorageEnricher>().As<IStorageEnricher>();
         builder.RegisterType<QuizCardsPlayer>().As<IQuizPlayer>();
-        builder.RegisterType<LeastKnownCards>().As<ILeastKnown>();
+        builder.RegisterType<LeastKnownCardPlayer>().As<ILeastKnownCardPlayer>();
         builder.RegisterType<ShuffleCardsProgressStorage>().As<IShuffleCardsProgressStorage>();
 
         return builder;

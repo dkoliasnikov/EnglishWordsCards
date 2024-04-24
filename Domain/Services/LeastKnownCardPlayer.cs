@@ -5,7 +5,7 @@ using Domain.Models;
 
 namespace Domain.Services;
 
-internal class LeastKnownCards : ILeastKnown
+internal class LeastKnownCardPlayer : ILeastKnownCardPlayer
 {
     private readonly IVocabularyStorage _vocabularyStorage;
     private readonly IMainLog _log;
@@ -13,7 +13,7 @@ internal class LeastKnownCards : ILeastKnown
     private readonly Options _options;
     private readonly int _delay;
 
-    public LeastKnownCards(IVocabularyStorage vocbularyStorage, IMainLog log, IShuffleCardsProgressStorage shuffleCardsProgressStorage, Options options)
+    public LeastKnownCardPlayer(IVocabularyStorage vocbularyStorage, IMainLog log, IShuffleCardsProgressStorage shuffleCardsProgressStorage, Options options)
     {
         _vocabularyStorage = vocbularyStorage;
         _log = log;
