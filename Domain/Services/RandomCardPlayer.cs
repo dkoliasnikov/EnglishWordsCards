@@ -5,11 +5,11 @@ using Domain.Models;
 
 namespace Domain.Services;
 
-internal class LeastKnownCardPlayer : ProgressCardsPlayerBase, ILeastKnownCardPlayer
+internal class RandomCardPlayer : ProgressCardsPlayerBase, IRandomCardPlayer
 {
-	public string Name { get => "Least known card"; }
+	public string Name { get => "Random Card"; }
 
-	public LeastKnownCardPlayer(IVocabularyStorage vocabularyStorage, IMainLog log, IShuffleCardsProgressStorage shuffleCardsProgressStorage, int delay) 
+	public RandomCardPlayer(IVocabularyStorage vocabularyStorage, IMainLog log, IShuffleCardsProgressStorage shuffleCardsProgressStorage, int delay)
 		: base(vocabularyStorage, log, shuffleCardsProgressStorage, delay)
 	{
 	}
@@ -18,5 +18,5 @@ internal class LeastKnownCardPlayer : ProgressCardsPlayerBase, ILeastKnownCardPl
 			(await _vocabularyStorage.GetVocabularyAsync())
 			.Words
 			.Select(w => new CardProgress(w, _shuffleCardsProgressStorage.Get(w.Literal)))
-			.OrderBy(w => w.ProgressValue);
+			.Shuffle();
 }

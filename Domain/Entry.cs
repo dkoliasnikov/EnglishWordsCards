@@ -25,10 +25,13 @@ public static class Entry
         builder.RegisterType<VocabularyStorage>().As<IVocabularyStorage>();
         builder.RegisterType<StorageEnricher>().As<IStorageEnricher>();
         builder.RegisterType<QuizCardsPlayer>().As<IQuizPlayer>();
-        builder.RegisterType<LeastKnownCardPlayer>().As<ILeastKnownCardPlayer>();
+        builder.RegisterType<LeastKnownCardPlayer>().As<ILeastKnownCardPlayer>()
+            .WithParameter("delay", options.DelayBeforeNextCard);
         builder.RegisterType<ShuffleCardsProgressStorage>().As<IShuffleCardsProgressStorage>();
+        builder.RegisterType<RandomCardPlayer>().As<IRandomCardPlayer>()
+			.WithParameter("delay", options.DelayBeforeNextCard);
 
-        return builder;
+		return builder;
     }
 
     private static void EnsureOptionsFileCreated()

@@ -7,15 +7,17 @@ namespace Domain.Services;
 
 internal class QuizCardsPlayer : IQuizPlayer
 {
-    private readonly IVocabularyStorage _vocabularyStorage;
+	public string Name { get => "Quiz"; }
+
+	private readonly IVocabularyStorage _vocabularyStorage;
     private readonly IMainLog _log;
-    private int _delay;
+    private int _delayBeforeNextCard;
 
     public QuizCardsPlayer(IVocabularyStorage vocbularyStorage, IMainLog log, Options options)
     {
         _vocabularyStorage = vocbularyStorage;
         _log = log;
-        _delay = options.DelayBeforeNextCard;
+        _delayBeforeNextCard = options.DelayBeforeNextCard;
     }
 
     public async Task Play()
@@ -34,19 +36,19 @@ internal class QuizCardsPlayer : IQuizPlayer
 
     private async Task PlayWord(Word word, IEnumerable<Word> words)
     {
-        var options = words.Shuffle()
+        var wordsPool = words.Shuffle()
             .Take(4)
             .Where(x => !x.Literal.Equals(word.Literal, StringComparison.OrdinalIgnoreCase))
             .Take(3)
             .ToList();
 
-        options.Add(word);
-        options = options.Shuffle().ToList();
+        wordsPool.Add(word);
+        wordsPool = wordsPool.Shuffle().ToList();
         _log.AppendLine($"{word.Literal}  [{word.Pronounce}]\n\n\n\n\n\n\n\n");
 
         var id = 0;
         int? correctAnswerId = null;
-        foreach (var option in options)
+        foreach (var option in wordsPool)
         {
             if (option.Literal.Equals(word.Literal, StringComparison.OrdinalIgnoreCase))
             {
@@ -55,10 +57,10 @@ internal class QuizCardsPlayer : IQuizPlayer
             }
             id++;
         }
-        var firstColumnWidth = Math.Max(options[0].Translation.Length, options[2].Translation.Length);
+        var firstColumnWidth = Math.Max(wordsPool[0].Translation.Length, wordsPool[2].Translation.Length);
 
-        _log.AppendLine($"1. {options[0].Translation.PadRight(firstColumnWidth)}   2. {options[1].Translation}");
-        _log.AppendLine($"3. {options[2].Translation.PadRight(firstColumnWidth)}   4. {options[3].Translation}");
+        _log.AppendLine($"1. {wordsPool[0].Translation.PadRight(firstColumnWidth)}   2. {wordsPool[1].Translation}");
+        _log.AppendLine($"3. {wordsPool[2].Translation.PadRight(firstColumnWidth)}   4. {wordsPool[3].Translation}");
 
         int userAnswer;
         while (!int.TryParse(new string(Console.ReadKey().KeyChar, 1), out userAnswer))
@@ -73,7 +75,7 @@ internal class QuizCardsPlayer : IQuizPlayer
             ConsoleCorrectAnswerColor();
             _log.AppendLine("Correct!");
             ConsoleDefaultColor();
-            await Task.Delay(_delay);
+            await Task.Delay(_delayBeforeNextCard);
         }
         else
         {
@@ -85,8 +87,7 @@ internal class QuizCardsPlayer : IQuizPlayer
         }
     }
 
-    public string? GetShortcuts() => null;
-
+    public string? GetShortcuts() => "1,2,3,4 - answer options";
 
 	private static void ConsoleIncorrectAnswerColor()
     {
@@ -105,5 +106,4 @@ internal class QuizCardsPlayer : IQuizPlayer
         Console.BackgroundColor = ConsoleColor.Black;
         Console.ForegroundColor = ConsoleColor.White;
     }
-
 }

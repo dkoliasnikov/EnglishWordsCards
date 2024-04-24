@@ -2,5 +2,5 @@
 
 public interface ILeastKnownCardPlayer : ICardsPlayer
 {
-    Task Play();
+
 }
