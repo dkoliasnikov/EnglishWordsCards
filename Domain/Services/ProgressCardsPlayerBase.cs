@@ -31,8 +31,8 @@ internal abstract class ProgressCardsPlayerBase : ICardsPlayer
 	public async Task Play()
 	{
 		var instructions = BuildInstructionsMap();
-
-		foreach (var word in await GetWords())
+		var words = await GetWords();
+		foreach (var word in words)
 		{
 			Console.Clear();
 			_log.AppendLine($"{word.Card.Literal}");
