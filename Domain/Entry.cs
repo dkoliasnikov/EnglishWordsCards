@@ -2,6 +2,7 @@
 using Common.Log;
 using Common.Log.Abstractions;
 using Domain.Abstraction;
+using Domain.Constants;
 using Domain.Services;
 using Domain.Services.Players;
 using Domain.Services.Players.Quiz;
@@ -27,13 +28,19 @@ public static class Entry
 
         builder.RegisterType<VocabularyStorage>().As<IVocabularyStorage>();
         builder.RegisterType<StorageEnricher>().As<IStorageEnricher>();
-        builder.RegisterType<RandomQuizCardsPlayer>().As<IRandomQuizPlayer>();
-        builder.RegisterType<LeastKnownQuizPlayer>().As<ILeastKnownQuizPlayer>();
-        builder.RegisterType<LeastKnownCardPlayer>().As<ILeastKnownCardPlayer>()
-            .WithParameter("delay", options.DelayBeforeNextCard);
         builder.RegisterType<ShuffleCardsProgressStorage>().As<IShuffleCardsProgressStorage>();
+
+        builder.RegisterType<RandomQuizCardsPlayer>().As<IRandomQuizPlayer>()
+            .WithParameter(ParameterNames.DelayBeforeNextCard, options.DelayBeforeNextCard);
+
+        builder.RegisterType<LeastKnownQuizPlayer>().As<ILeastKnownQuizPlayer>()
+            .WithParameter(ParameterNames.DelayBeforeNextCard, options.DelayBeforeNextCard);
+
+        builder.RegisterType<LeastKnownCardPlayer>().As<ILeastKnownCardPlayer>()
+            .WithParameter(ParameterNames.DelayBeforeNextCard, options.DelayBeforeNextCard);
+
         builder.RegisterType<RandomCardPlayer>().As<IRandomCardPlayer>()
-            .WithParameter("delay", options.DelayBeforeNextCard);
+            .WithParameter(ParameterNames.DelayBeforeNextCard, options.DelayBeforeNextCard);
 
         return builder;
     }
@@ -41,8 +48,6 @@ public static class Entry
     private static void EnsureOptionsFileCreated()
     {
         if (!File.Exists(Constants.Paths.OptionsPath))
-            File.WriteAllText(Constants.Paths.OptionsPath, JsonConvert.SerializeObject(new Options(), Formatting.Indented));
+            File.WriteAllText(path: Constants.Paths.OptionsPath, JsonConvert.SerializeObject(new Options(Constants.Options.DefaultDelayBeforeNextCard), Formatting.Indented));
     }
-
-    private static void SaveOptions(Options options) => File.WriteAllText(Constants.Paths.OptionsPath, JsonConvert.SerializeObject(options, Formatting.Indented));
 }

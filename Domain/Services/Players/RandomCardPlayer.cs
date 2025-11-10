@@ -7,10 +7,10 @@ namespace Domain.Services.Players;
 
 internal class RandomCardPlayer : ProgressCardsPlayerBase, IRandomCardPlayer
 {
-    public string Name { get => "Random Card"; }
+    public override string Name { get => "Random Card"; }
 
-    public RandomCardPlayer(IVocabularyStorage vocabularyStorage, IMainLog log, IShuffleCardsProgressStorage shuffleCardsProgressStorage, int delay)
-        : base(vocabularyStorage, log, shuffleCardsProgressStorage, delay)
+    public RandomCardPlayer(IVocabularyStorage vocabularyStorage, IMainLog log, IShuffleCardsProgressStorage shuffleCardsProgressStorage, TimeSpan delayBeforeNextCard)
+        : base(vocabularyStorage, log, shuffleCardsProgressStorage, delayBeforeNextCard)
     {
     }
 

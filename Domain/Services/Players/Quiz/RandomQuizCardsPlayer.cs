@@ -9,12 +9,12 @@ internal class RandomQuizCardsPlayer : QuizPlayerBase, IRandomQuizPlayer
 {
     public override string Name { get => "Quiz"; }
 
-    public RandomQuizCardsPlayer(IVocabularyStorage vocabularyStorage, IShuffleCardsProgressStorage shuffleCardsProgressStorage, IMainLog log, Options options) 
-        : base(vocabularyStorage, shuffleCardsProgressStorage, log, options)
+    public RandomQuizCardsPlayer(IVocabularyStorage vocabularyStorage, IShuffleCardsProgressStorage shuffleCardsProgressStorage, IMainLog log, TimeSpan delayBeforeNextCard) 
+        : base(vocabularyStorage, shuffleCardsProgressStorage, log, delayBeforeNextCard)
     {
     }
 
-    protected override async Task<ICollection<Word>> GetWordsAsync()
+    protected override async Task<List<Word>> GetWordsAsync()
     {
         var vocabulary = await VocabularyStorage.GetVocabularyAsync();
 

@@ -13,13 +13,14 @@ internal abstract class QuizPlayerBase : IQuizPlayer
     protected readonly IShuffleCardsProgressStorage ShuffleCardsProgressStorage;
 
     private readonly IMainLog _log;
-    private readonly int _delayBeforeNextCard;
+    private readonly TimeSpan _delayBeforeNextCard = TimeSpan.FromSeconds(3);
 
-    public QuizPlayerBase(IVocabularyStorage vocabularyStorage, IShuffleCardsProgressStorage shuffleCardsProgressStorage, IMainLog log, Options options)
+    public QuizPlayerBase(IVocabularyStorage vocabularyStorage, IShuffleCardsProgressStorage shuffleCardsProgressStorage, IMainLog log, TimeSpan delayBeforeNextCard)
     {
         _log = log;
         VocabularyStorage = vocabularyStorage;
         ShuffleCardsProgressStorage = shuffleCardsProgressStorage;
+        _delayBeforeNextCard = delayBeforeNextCard;
     }
 
     public string? GetShortcuts() => "1,2,3,4 - answer options";
@@ -37,7 +38,7 @@ internal abstract class QuizPlayerBase : IQuizPlayer
         }
     }
 
-    protected abstract Task<ICollection<Word>> GetWordsAsync();
+    protected abstract Task<List<Word>> GetWordsAsync();
 
     private async Task PlayWord(Word word, IEnumerable<Word> words)
     {
@@ -92,7 +93,8 @@ internal abstract class QuizPlayerBase : IQuizPlayer
             _log.Append($"Incorrect!");
             ConsoleDefaultColor();
             _log.AppendLine($" Correct answer is {correctAnswerId + 1}. {word.Translation}");
-            Console.ReadKey();
+            await Task.Delay(_delayBeforeNextCard);
+
         }
     }
 

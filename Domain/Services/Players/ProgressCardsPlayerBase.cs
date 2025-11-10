@@ -9,21 +9,21 @@ internal abstract class ProgressCardsPlayerBase : ICardsPlayer
     protected readonly IVocabularyStorage _vocabularyStorage;
     protected readonly IMainLog _log;
     protected readonly IShuffleCardsProgressStorage _shuffleCardsProgressStorage;
-    protected readonly int _delay;
+    protected readonly TimeSpan _delayBeforeNextCard;
     private readonly char _incrementProgressKey = '+';
     private readonly char _decrementProgressKey = '-';
     private readonly char _showTranslationKey = '0';
 
-    public string Name => "Unknown Game";
+    public virtual string Name => "Unknown Game";
 
     private record InstructionResult(bool GoToNextWord);
 
-    public ProgressCardsPlayerBase(IVocabularyStorage vocabularyStorage, IMainLog log, IShuffleCardsProgressStorage shuffleCardsProgressStorage, int delay)
+    public ProgressCardsPlayerBase(IVocabularyStorage vocabularyStorage, IMainLog log, IShuffleCardsProgressStorage shuffleCardsProgressStorage, TimeSpan delayBeforeNextCard)
     {
         _vocabularyStorage = vocabularyStorage;
         _log = log;
         _shuffleCardsProgressStorage = shuffleCardsProgressStorage;
-        _delay = delay;
+        _delayBeforeNextCard = delayBeforeNextCard;
     }
 
     public abstract Task<List<CardProgress>> GetWords();
@@ -83,7 +83,7 @@ internal abstract class ProgressCardsPlayerBase : ICardsPlayer
             }
         };
 
-    private Task DelayBeforNextCard() => Task.Delay(_delay);
+    private Task DelayBeforNextCard() => Task.Delay(_delayBeforeNextCard);
 
     public string? GetShortcuts() => $"'0' - show translation. '+' - i know the answer. '-' - i don`t know the answer";
 

@@ -8,12 +8,12 @@ internal class LeastKnownQuizPlayer : QuizPlayerBase, ILeastKnownQuizPlayer
 {
     public override string Name { get => "Least Known Quiz"; }
 
-    public LeastKnownQuizPlayer(IMainLog log, Options options, IVocabularyStorage vocabularyStorage, IShuffleCardsProgressStorage shuffleCardsProgressStorage) 
-        : base(vocabularyStorage, shuffleCardsProgressStorage, log, options)
+    public LeastKnownQuizPlayer(IMainLog log, IVocabularyStorage vocabularyStorage, IShuffleCardsProgressStorage shuffleCardsProgressStorage, TimeSpan delayBeforeNextCard) 
+        : base(vocabularyStorage, shuffleCardsProgressStorage, log, delayBeforeNextCard)
     {
     }
 
-    protected override async Task<ICollection<Word>> GetWordsAsync()
+    protected override async Task<List<Word>> GetWordsAsync()
     {
         var vocabulary = await VocabularyStorage.GetVocabularyAsync();
 

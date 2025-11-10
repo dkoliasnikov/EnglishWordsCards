@@ -6,10 +6,10 @@ namespace Domain.Services.Players;
 
 internal class LeastKnownCardPlayer : ProgressCardsPlayerBase, ILeastKnownCardPlayer
 {
-    public string Name { get => "Least known card"; }
+    public override string Name { get => "Least known card"; }
 
-    public LeastKnownCardPlayer(IVocabularyStorage vocabularyStorage, IMainLog log, IShuffleCardsProgressStorage shuffleCardsProgressStorage, int delay)
-        : base(vocabularyStorage, log, shuffleCardsProgressStorage, delay)
+    public LeastKnownCardPlayer(IVocabularyStorage vocabularyStorage, IMainLog log, IShuffleCardsProgressStorage shuffleCardsProgressStorage, TimeSpan delayBeforeNextCard)
+        : base(vocabularyStorage, log, shuffleCardsProgressStorage, delayBeforeNextCard)
     {
     }
 
