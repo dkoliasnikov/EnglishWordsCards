@@ -4,7 +4,7 @@ using Domain.Models;
 using Newtonsoft.Json;
 using System.Linq;
 
-namespace Domain.Services;
+namespace Domain.Services.Storage;
 
 internal class VocabularyStorage : IVocabularyStorage
 {
@@ -37,7 +37,7 @@ internal class VocabularyStorage : IVocabularyStorage
         ThrowOnStorageFileNotExists();
         var vocabulary = JsonConvert.DeserializeObject<Vocabulary>(File.ReadAllText(_options.VocabularyStoragePath));
 
-        return new Vocabulary(vocabulary.Words.Where(w => !string.IsNullOrEmpty(w.Literal)).ToList());
+        return new (vocabulary.Words.Where(w => !string.IsNullOrEmpty(w.Literal)).ToList());
     }
 
     private void EnsureStorageFileCreated()

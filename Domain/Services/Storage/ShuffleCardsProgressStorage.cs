@@ -2,7 +2,7 @@
 using Domain.Models;
 using Newtonsoft.Json;
 
-namespace Domain.Services;
+namespace Domain.Services.Storage;
 
 internal class ShuffleCardsProgressStorage : IShuffleCardsProgressStorage
 {
@@ -20,7 +20,7 @@ internal class ShuffleCardsProgressStorage : IShuffleCardsProgressStorage
         SaveProgressStorage();
     }
 
-    public int Get(string literal)
+    public int? Get(string literal)
     {
         EnsureStorageLoaded();
 

@@ -24,7 +24,7 @@ using (var scope = ioc)
 
 		Console.Clear();
 
-		await player.Play();
+		await player.PlayAsync();
 	}
 	catch (Exception e)
 	{
@@ -57,7 +57,7 @@ static ICardsPlayer LetUserChooseGameMode(IContainer scope, IMainLog log)
 
 static IEnumerable<PlayerOption> GetGamesOptionsMap(IContainer scope)
 {
-	var allCardsGamesTypes = GetCardsGameImplementation();
+	var allCardsGamesTypes = GetCardsGameImplementation().ToList();
 
 	var shortCutsPool = Enumerable.Range(0, 10).Select(i => i.ToString().Single()).ToArray();
 
@@ -81,13 +81,21 @@ static string? GetCardsGameName(ICardsPlayer t) =>
 		.Single()
 		.GetValue(null);
 
-static IEnumerable<ICardsPlayer> GetAllCardsPlayer() => GetCardsGameImplementation().Cast<ICardsPlayer>();
+static IEnumerable<PlayerWithInterface> GetCardsGameImplementation()
+{
+	var abstractInterfaces = new HashSet<string>() 
+	{
+		nameof(ICardsPlayer), nameof(IQuizPlayer)
+	};
 
-static IEnumerable<PlayerWithInterface> GetCardsGameImplementation() =>
-		 AppDomain.CurrentDomain.GetAssemblies()
-		.SelectMany(s => s.GetTypes())
-		.Where(type => typeof(ICardsPlayer).IsAssignableFrom(type) && !type.IsAbstract).Select(t =>
-			new PlayerWithInterface(t, t.GetInterfaces().Where(i => i.Name != nameof(ICardsPlayer)).Single()));
+    var players = AppDomain.CurrentDomain.GetAssemblies()
+        .SelectMany(s => s.GetTypes())
+        .Where(type => 
+			typeof(ICardsPlayer).IsAssignableFrom(type) && !type.IsAbstract).Select(t =>
+            new PlayerWithInterface(t, t.GetInterfaces().Where(i => !abstractInterfaces.Contains(i.Name)).Single()));
+
+	return players;
+}
 
 internal record struct PlayerOption(ICardsPlayer Player, char ShortCut);
 

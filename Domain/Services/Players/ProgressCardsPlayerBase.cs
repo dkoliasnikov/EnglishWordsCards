@@ -3,7 +3,7 @@ using Common.Log.Abstractions;
 using Domain.Abstraction;
 using Domain.Models;
 
-namespace Domain.Services;
+namespace Domain.Services.Players;
 
 internal abstract class ProgressCardsPlayerBase : ICardsPlayer
 {
@@ -28,7 +28,7 @@ internal abstract class ProgressCardsPlayerBase : ICardsPlayer
 	}
 	public abstract Task<IEnumerable<CardProgress>> GetWords();
 
-	public async Task Play()
+	public async Task PlayAsync()
 	{
 		var instructions = BuildInstructionsMap();
 		var words = await GetWords();
@@ -57,14 +57,14 @@ internal abstract class ProgressCardsPlayerBase : ICardsPlayer
 		new()
 		{
 			{
-				_showTranslationKey, async (CardProgress word) =>
+				_showTranslationKey, async (word) =>
 				{
 					await ShowTranslation(word.Card);
 					return new(false);
 				}
 			},
 			{
-				_incrementProgressKey, async (CardProgress word) =>
+				_incrementProgressKey, async (word) =>
 				{
 					Increment(word.Card.Literal);
 					await ShowTranslation(word.Card);
@@ -73,7 +73,7 @@ internal abstract class ProgressCardsPlayerBase : ICardsPlayer
 				}
 			},
 			{
-			_decrementProgressKey, async (CardProgress word) =>
+			_decrementProgressKey, async (word) =>
 				{
 					Decrement(word.Card.Literal);
 					await ShowTranslation(word.Card);
@@ -84,7 +84,6 @@ internal abstract class ProgressCardsPlayerBase : ICardsPlayer
 		};
 
 	private Task DelayBeforNextCard() => Task.Delay(_delay);
-
 
 	public string? GetShortcuts() => $"'0' - show translation. '+' - i know the answer. '-' - i don`t know the answer";
 

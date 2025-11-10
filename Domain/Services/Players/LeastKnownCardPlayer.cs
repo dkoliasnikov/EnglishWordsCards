@@ -1,9 +1,10 @@
 ﻿using Common.Extensions;
 using Common.Log.Abstractions;
 using Domain.Abstraction;
+using Domain.Exceptions;
 using Domain.Models;
 
-namespace Domain.Services;
+namespace Domain.Services.Players;
 
 internal class LeastKnownCardPlayer : ProgressCardsPlayerBase, ILeastKnownCardPlayer
 {
@@ -17,6 +18,6 @@ internal class LeastKnownCardPlayer : ProgressCardsPlayerBase, ILeastKnownCardPl
 	public override async Task<IEnumerable<CardProgress>> GetWords() =>
 			(await _vocabularyStorage.GetVocabularyAsync())
 			.Words
-			.Select(w => new CardProgress(w, _shuffleCardsProgressStorage.Get(w.Literal)))
+			.Select(w => new CardProgress(w, _shuffleCardsProgressStorage.Get(w.Literal) ?? throw new MissingWordProgressException(w.Literal)))
 			.OrderBy(w => w.ProgressValue);
 }

@@ -4,7 +4,7 @@ public interface ICardsPlayer
 {
 	string Name { get; }
 
-    Task Play();
+    Task PlayAsync();
 
 	string? GetShortcuts();
 }

@@ -1,6 +1,3 @@
 ﻿namespace Domain.Abstraction;
 
-public interface IQuizPlayer : ICardsPlayer
-{
-    Task Play();
-}
+public interface IQuizPlayer : ICardsPlayer;

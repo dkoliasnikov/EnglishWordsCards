@@ -3,6 +3,9 @@ using Common.Log;
 using Common.Log.Abstractions;
 using Domain.Abstraction;
 using Domain.Services;
+using Domain.Services.Players;
+using Domain.Services.Players.Quiz;
+using Domain.Services.Storage;
 using Newtonsoft.Json;
 
 namespace Domain;
@@ -24,7 +27,8 @@ public static class Entry
 
         builder.RegisterType<VocabularyStorage>().As<IVocabularyStorage>();
         builder.RegisterType<StorageEnricher>().As<IStorageEnricher>();
-        builder.RegisterType<QuizCardsPlayer>().As<IQuizPlayer>();
+        builder.RegisterType<RandomQuizCardsPlayer>().As<IRandomQuizPlayer>();
+        builder.RegisterType<LeastKnownQuizPlayer>().As<ILeastKnownQuizPlayer>();
         builder.RegisterType<LeastKnownCardPlayer>().As<ILeastKnownCardPlayer>()
             .WithParameter("delay", options.DelayBeforeNextCard);
         builder.RegisterType<ShuffleCardsProgressStorage>().As<IShuffleCardsProgressStorage>();

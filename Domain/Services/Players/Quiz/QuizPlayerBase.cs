@@ -3,29 +3,29 @@ using Common.Extensions;
 using Domain.Abstraction;
 using Domain.Models;
 
-namespace Domain.Services;
+namespace Domain.Services.Players.Quiz;
 
-internal class QuizCardsPlayer : IQuizPlayer
+internal abstract class QuizPlayerBase : IQuizPlayer
 {
-	public string Name { get => "Quiz"; }
+	public virtual string Name { get => throw new NotImplementedException(); }
+    protected readonly IVocabularyStorage VocabularyStorage;
 
-	private readonly IVocabularyStorage _vocabularyStorage;
     private readonly IMainLog _log;
-    private int _delayBeforeNextCard;
+    private readonly int _delayBeforeNextCard;
 
-    public QuizCardsPlayer(IVocabularyStorage vocbularyStorage, IMainLog log, Options options)
+    public QuizPlayerBase(IVocabularyStorage vocabularyStorage, IMainLog log, Options options)
     {
-        _vocabularyStorage = vocbularyStorage;
         _log = log;
-        _delayBeforeNextCard = options.DelayBeforeNextCard;
+        VocabularyStorage = vocabularyStorage;
     }
 
-    public async Task Play()
+    public string? GetShortcuts() => "1,2,3,4 - answer options";
+
+    public async Task PlayAsync()
     {
         ConsoleDefaultColor();
-        var vocabular = await _vocabularyStorage.GetVocabularyAsync();
 
-        var words = vocabular.Words.Shuffle();
+        var words = await GetWordsAsync();
 
         foreach (var word in words)
         {
@@ -34,21 +34,24 @@ internal class QuizCardsPlayer : IQuizPlayer
         }
     }
 
+    protected abstract Task<ICollection<Word>> GetWordsAsync();
+
     private async Task PlayWord(Word word, IEnumerable<Word> words)
     {
-        var wordsPool = words.Shuffle()
+        var roundWordsPool = words.Shuffle()
             .Take(4)
             .Where(x => !x.Literal.Equals(word.Literal, StringComparison.OrdinalIgnoreCase))
             .Take(3)
             .ToList();
 
-        wordsPool.Add(word);
-        wordsPool = wordsPool.Shuffle().ToList();
+        roundWordsPool.Add(word);
+        roundWordsPool = roundWordsPool.Shuffle().ToList();
+
         _log.AppendLine($"{word.Literal}  [{word.Pronounce}]\n\n\n\n\n\n\n\n");
 
         var id = 0;
         int? correctAnswerId = null;
-        foreach (var option in wordsPool)
+        foreach (var option in roundWordsPool)
         {
             if (option.Literal.Equals(word.Literal, StringComparison.OrdinalIgnoreCase))
             {
@@ -57,10 +60,11 @@ internal class QuizCardsPlayer : IQuizPlayer
             }
             id++;
         }
-        var firstColumnWidth = Math.Max(wordsPool[0].Translation.Length, wordsPool[2].Translation.Length);
 
-        _log.AppendLine($"1. {wordsPool[0].Translation.PadRight(firstColumnWidth)}   2. {wordsPool[1].Translation}");
-        _log.AppendLine($"3. {wordsPool[2].Translation.PadRight(firstColumnWidth)}   4. {wordsPool[3].Translation}");
+        var firstColumnWidth = Math.Max(roundWordsPool[0].Translation.Length, roundWordsPool[2].Translation.Length);
+
+        _log.AppendLine($"1. {roundWordsPool[0].Translation.PadRight(firstColumnWidth)}   2. {roundWordsPool[1].Translation}");
+        _log.AppendLine($"3. {roundWordsPool[2].Translation.PadRight(firstColumnWidth)}   4. {roundWordsPool[3].Translation}");
 
         int userAnswer;
         while (!int.TryParse(new string(Console.ReadKey().KeyChar, 1), out userAnswer))
@@ -86,8 +90,6 @@ internal class QuizCardsPlayer : IQuizPlayer
             Console.ReadKey();
         }
     }
-
-    public string? GetShortcuts() => "1,2,3,4 - answer options";
 
 	private static void ConsoleIncorrectAnswerColor()
     {
