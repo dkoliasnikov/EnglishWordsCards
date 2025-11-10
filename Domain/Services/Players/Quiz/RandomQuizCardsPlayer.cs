@@ -9,9 +9,9 @@ internal class RandomQuizCardsPlayer : QuizPlayerBase, IRandomQuizPlayer
 {
     public override string Name { get => "Quiz"; }
 
-    public RandomQuizCardsPlayer(IVocabularyStorage vocabularyStorage, IMainLog log, Options options) : base(vocabularyStorage, log, options)
+    public RandomQuizCardsPlayer(IVocabularyStorage vocabularyStorage, IShuffleCardsProgressStorage shuffleCardsProgressStorage, IMainLog log, Options options) 
+        : base(vocabularyStorage, shuffleCardsProgressStorage, log, options)
     {
-
     }
 
     protected override async Task<ICollection<Word>> GetWordsAsync()

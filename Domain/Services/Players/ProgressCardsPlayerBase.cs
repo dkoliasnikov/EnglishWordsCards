@@ -14,7 +14,7 @@ internal abstract class ProgressCardsPlayerBase : ICardsPlayer
     private readonly char _decrementProgressKey = '-';
     private readonly char _showTranslationKey = '0';
 
-    public string Name => "Inknown Game";
+    public string Name => "Unknown Game";
 
     private record InstructionResult(bool GoToNextWord);
 
@@ -25,7 +25,8 @@ internal abstract class ProgressCardsPlayerBase : ICardsPlayer
         _shuffleCardsProgressStorage = shuffleCardsProgressStorage;
         _delay = delay;
     }
-    public abstract Task<IEnumerable<CardProgress>> GetWords();
+
+    public abstract Task<List<CardProgress>> GetWords();
 
     public async Task PlayAsync()
     {

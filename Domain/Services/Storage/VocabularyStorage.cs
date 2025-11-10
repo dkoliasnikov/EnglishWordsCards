@@ -1,6 +1,7 @@
 ﻿using Domain.Abstraction;
 using Domain.Exceptions;
 using Domain.Models;
+using Domain.Serialization;
 using Newtonsoft.Json;
 
 namespace Domain.Services.Storage;
@@ -28,22 +29,22 @@ internal class VocabularyStorage : IVocabularyStorage
         }
 
         vocabulary.Words.AddRange(words);
-        File.WriteAllText(_options.VocabularyStoragePath, JsonConvert.SerializeObject(vocabulary, Formatting.Indented));
+        File.WriteAllText(_options.VocabularyStoragePath, JsonConvert.SerializeObject(vocabulary, Formatting.Indented, DefaultSettings.DefaultJsonSerializationSettings));
     }
 
-    public async Task<Vocabulary> GetVocabularyAsync()
+    public Task<Vocabulary> GetVocabularyAsync()
     {
         ThrowOnStorageFileNotExists();
-        var vocabulary = JsonConvert.DeserializeObject<Vocabulary>(File.ReadAllText(_options.VocabularyStoragePath));
+        var vocabulary = JsonConvert.DeserializeObject<Vocabulary>(File.ReadAllText(_options.VocabularyStoragePath), DefaultSettings.DefaultJsonDeserializationSettings);
 
-        return new(vocabulary.Words.Where(w => !string.IsNullOrEmpty(w.Literal)).ToList());
+        return Task.FromResult(new Vocabulary(vocabulary.Words.Where(w => !string.IsNullOrEmpty(w.Literal)).ToList()));
     }
 
     private void EnsureStorageFileCreated()
     {
         if (!File.Exists(_options.VocabularyStoragePath))
         {
-            File.WriteAllText(_options.VocabularyStoragePath, JsonConvert.SerializeObject(new Vocabulary(new()), Formatting.Indented));
+            File.WriteAllText(_options.VocabularyStoragePath, JsonConvert.SerializeObject(new Vocabulary(new()), Formatting.Indented, DefaultSettings.DefaultJsonSerializationSettings));
         }
     }
 
@@ -52,5 +53,4 @@ internal class VocabularyStorage : IVocabularyStorage
         if (!File.Exists(_options.VocabularyStoragePath))
             throw new FileNotFoundException("Vocabulary storage file does not exists", _options.VocabularyStoragePath);
     }
-
 }

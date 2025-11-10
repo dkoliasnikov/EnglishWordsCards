@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Common.Extensions;
 using Common.Log.Abstractions;
 using Domain;
 using Domain.Abstraction;
@@ -18,6 +19,8 @@ using (var scope = ioc)
 
     try
     {
+        await EnrichProgressTableWithNewWords(scope, log);
+
         ConsoleConfigurator.Configure();
 
         ICardsPlayer player = LetUserChooseGameMode(scope, log);
@@ -95,6 +98,18 @@ static IEnumerable<PlayerWithInterface> GetCardsGameImplementation()
             new PlayerWithInterface(t, t.GetInterfaces().Where(i => !abstractInterfaces.Contains(i.Name)).Single()));
 
     return players;
+}
+
+static async Task EnrichProgressTableWithNewWords(IContainer scope, IMainLog log)
+{
+    var shuffleCardsProgressStorage = scope.Resolve<IShuffleCardsProgressStorage>();
+    var vocabularyStorage = scope.Resolve<IVocabularyStorage>();
+    
+    await using (await ("Enriching progress storage", log).BeginScopeLoggingAsync())
+    {
+        var vocabulary = await vocabularyStorage.GetVocabularyAsync();
+        shuffleCardsProgressStorage.Enrich(vocabulary.Words);
+    }
 }
 
 internal record struct PlayerOption(ICardsPlayer Player, char ShortCut);

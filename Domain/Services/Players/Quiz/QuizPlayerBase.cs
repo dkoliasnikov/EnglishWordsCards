@@ -2,6 +2,7 @@
 using Common.Log.Abstractions;
 using Domain.Abstraction;
 using Domain.Models;
+using Domain.Services.Storage;
 
 namespace Domain.Services.Players.Quiz;
 
@@ -9,14 +10,16 @@ internal abstract class QuizPlayerBase : IQuizPlayer
 {
     public virtual string Name { get => throw new NotImplementedException(); }
     protected readonly IVocabularyStorage VocabularyStorage;
+    protected readonly IShuffleCardsProgressStorage ShuffleCardsProgressStorage;
 
     private readonly IMainLog _log;
     private readonly int _delayBeforeNextCard;
 
-    public QuizPlayerBase(IVocabularyStorage vocabularyStorage, IMainLog log, Options options)
+    public QuizPlayerBase(IVocabularyStorage vocabularyStorage, IShuffleCardsProgressStorage shuffleCardsProgressStorage, IMainLog log, Options options)
     {
         _log = log;
         VocabularyStorage = vocabularyStorage;
+        ShuffleCardsProgressStorage = shuffleCardsProgressStorage;
     }
 
     public string? GetShortcuts() => "1,2,3,4 - answer options";
@@ -76,6 +79,7 @@ internal abstract class QuizPlayerBase : IQuizPlayer
 
         if (--userAnswer == correctAnswerId)
         {
+            ShuffleCardsProgressStorage.Increment(word.Literal);
             ConsoleCorrectAnswerColor();
             _log.AppendLine("Correct!");
             ConsoleDefaultColor();
@@ -83,6 +87,7 @@ internal abstract class QuizPlayerBase : IQuizPlayer
         }
         else
         {
+            ShuffleCardsProgressStorage.Decrement(word.Literal);
             ConsoleIncorrectAnswerColor();
             _log.Append($"Incorrect!");
             ConsoleDefaultColor();

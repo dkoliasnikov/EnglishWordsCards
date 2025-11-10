@@ -1,7 +1,6 @@
 ﻿using Common.Extensions;
 using Common.Log.Abstractions;
 using Domain.Abstraction;
-using Domain.Exceptions;
 using Domain.Models;
 
 namespace Domain.Services.Players;
@@ -15,9 +14,10 @@ internal class RandomCardPlayer : ProgressCardsPlayerBase, IRandomCardPlayer
     {
     }
 
-    public override async Task<IEnumerable<CardProgress>> GetWords() =>
+    public override async Task<List<CardProgress>> GetWords() =>
             (await _vocabularyStorage.GetVocabularyAsync())
             .Words
-            .Select(w => new CardProgress(w, _shuffleCardsProgressStorage.Get(w.Literal) ?? throw new MissingWordProgressException(w.Literal)))
-            .Shuffle();
+            .Select(w => new CardProgress(w, _shuffleCardsProgressStorage.Get(w.Literal)))
+            .Shuffle()
+            .ToList();
 }
