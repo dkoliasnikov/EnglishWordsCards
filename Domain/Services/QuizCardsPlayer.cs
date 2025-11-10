@@ -82,7 +82,7 @@ internal class QuizCardsPlayer : IQuizPlayer
             ConsoleIncorrectAnswerColor();
             _log.Append($"Incorrect!");
             ConsoleDefaultColor();
-            _log.AppendLine($" Correct answer is {correctAnswerId}. {word.Translation}");
+            _log.AppendLine($" Correct answer is {correctAnswerId + 1}. {word.Translation}");
             Console.ReadKey();
         }
     }
