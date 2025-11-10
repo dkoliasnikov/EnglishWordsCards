@@ -1,16 +1,15 @@
 ﻿using Common.Log.Abstractions;
-using Common.Extensions;
 using Domain.Abstraction;
-using Domain.Models;
 using Domain.Exceptions;
+using Domain.Models;
 
 namespace Domain.Services.Players.Quiz;
 
 internal class LeastKnownQuizPlayer : QuizPlayerBase, ILeastKnownQuizPlayer
 {
-	public override string Name { get => "Least Known Quiz (not affects progress)"; }
+    public override string Name { get => "Least Known Quiz (not affects progress)"; }
 
-	private readonly IShuffleCardsProgressStorage _shuffleCardsProgressStorage;
+    private readonly IShuffleCardsProgressStorage _shuffleCardsProgressStorage;
 
     public LeastKnownQuizPlayer(IShuffleCardsProgressStorage shuffleCardsProgressStorage, IMainLog log, Options options, IVocabularyStorage vocabularyStorage) : base(vocabularyStorage, log, options)
     {

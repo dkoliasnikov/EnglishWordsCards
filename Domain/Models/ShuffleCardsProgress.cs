@@ -2,5 +2,5 @@
 
 public class ShuffleCardsProgress
 {
-   public Dictionary<string, int> ProgressMap { get; set; } = new Dictionary<string, int>();
+    public Dictionary<string, int> ProgressMap { get; set; } = new Dictionary<string, int>();
 }

@@ -8,6 +8,6 @@ public interface IShuffleCardsProgressStorage
     int? Get(string literal);
 
     void Increment(string literal);
-   
+
     void Decrement(string literal);
 }

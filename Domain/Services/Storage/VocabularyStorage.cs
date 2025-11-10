@@ -2,13 +2,12 @@
 using Domain.Exceptions;
 using Domain.Models;
 using Newtonsoft.Json;
-using System.Linq;
 
 namespace Domain.Services.Storage;
 
 internal class VocabularyStorage : IVocabularyStorage
 {
-    private readonly Options _options ;
+    private readonly Options _options;
 
     public VocabularyStorage(Options options)
     {
@@ -37,14 +36,14 @@ internal class VocabularyStorage : IVocabularyStorage
         ThrowOnStorageFileNotExists();
         var vocabulary = JsonConvert.DeserializeObject<Vocabulary>(File.ReadAllText(_options.VocabularyStoragePath));
 
-        return new (vocabulary.Words.Where(w => !string.IsNullOrEmpty(w.Literal)).ToList());
+        return new(vocabulary.Words.Where(w => !string.IsNullOrEmpty(w.Literal)).ToList());
     }
 
     private void EnsureStorageFileCreated()
     {
         if (!File.Exists(_options.VocabularyStoragePath))
         {
-            File.WriteAllText(_options.VocabularyStoragePath, JsonConvert.SerializeObject(new Vocabulary(new ()), Formatting.Indented));
+            File.WriteAllText(_options.VocabularyStoragePath, JsonConvert.SerializeObject(new Vocabulary(new()), Formatting.Indented));
         }
     }
 

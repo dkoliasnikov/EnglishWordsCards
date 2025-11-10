@@ -2,9 +2,9 @@
 
 public interface ICardsPlayer
 {
-	string Name { get; }
+    string Name { get; }
 
     Task PlayAsync();
 
-	string? GetShortcuts();
+    string? GetShortcuts();
 }

@@ -1,6 +1,4 @@
-﻿using Domain.Models;
-
-namespace Domain.Exceptions;
+﻿namespace Domain.Exceptions;
 
 internal class MissingWordProgressException : Exception
 {

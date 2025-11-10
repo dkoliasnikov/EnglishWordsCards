@@ -24,7 +24,7 @@ internal class ShuffleCardsProgressStorage : IShuffleCardsProgressStorage
     {
         EnsureStorageLoaded();
 
-        if(_progress.ProgressMap.TryGetValue(literal, out int value))
+        if (_progress.ProgressMap.TryGetValue(literal, out int value))
         {
             return value;
         }
@@ -35,7 +35,7 @@ internal class ShuffleCardsProgressStorage : IShuffleCardsProgressStorage
 
     private void EnsureStorageLoaded()
     {
-        if(_progress == null)
+        if (_progress == null)
         {
             EnsureStorageFileCreated();
             _progress = JsonConvert.DeserializeObject<ShuffleCardsProgress>(File.ReadAllText(_storagePath));

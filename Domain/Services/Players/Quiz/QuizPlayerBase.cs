@@ -1,5 +1,5 @@
-﻿using Common.Log.Abstractions;
-using Common.Extensions;
+﻿using Common.Extensions;
+using Common.Log.Abstractions;
 using Domain.Abstraction;
 using Domain.Models;
 
@@ -7,7 +7,7 @@ namespace Domain.Services.Players.Quiz;
 
 internal abstract class QuizPlayerBase : IQuizPlayer
 {
-	public virtual string Name { get => throw new NotImplementedException(); }
+    public virtual string Name { get => throw new NotImplementedException(); }
     protected readonly IVocabularyStorage VocabularyStorage;
 
     private readonly IMainLog _log;
@@ -91,7 +91,7 @@ internal abstract class QuizPlayerBase : IQuizPlayer
         }
     }
 
-	private static void ConsoleIncorrectAnswerColor()
+    private static void ConsoleIncorrectAnswerColor()
     {
         Console.BackgroundColor = ConsoleColor.Red;
         Console.ForegroundColor = ConsoleColor.White;
